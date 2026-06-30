@@ -1,0 +1,204 @@
+/* =========================
+   RESET
+========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* =========================
+   BODY
+========================= */
+body {
+    font-family: Arial, sans-serif;
+    background: #ffffff;
+    color: #000;
+    padding: 10px;
+}
+
+/* =========================
+   TÍTULOS
+========================= */
+h1, h2, .brand {
+    color: #FFD700;
+}
+
+/* =========================
+   TÍTULO TARJETA CLIENTE
+========================= */
+.titulo-tarjeta {
+    font-size: 20px;
+    font-weight: bold;
+    color: #FFD700;
+    text-align: center;
+    margin: 8px 0 12px;
+}
+
+/* =========================
+   CARD (REGISTRO / TARJETA)
+========================= */
+.card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.15);
+    border-top: 6px solid #FFD700;
+    width: 100%;
+    max-width: 420px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+}
+
+/* =========================
+   INPUTS Y BOTONES
+========================= */
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background: #FFD700;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* =========================
+   TABLA ADMIN
+========================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+th {
+    background: #000;
+    color: #FFD700;
+    padding: 10px;
+}
+
+td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+/* =========================
+   BOTONES ADMIN
+========================= */
+.action {
+    padding: 6px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    margin: 2px;
+    color: inherit;
+}
+
+/* colores seguros */
+.ver {
+    background: #FFD700;
+    color: #000;
+}
+
+.sumar {
+    background: #28a745;
+    color: white;
+}
+
+.quitar {
+    background: #dc3545;
+    color: white;
+}
+
+.reiniciar {
+    background: #343a40;
+    color: #FFD700;
+}
+
+.eliminar {
+    background: #ff3b3b;
+    color: white;
+}
+
+/* =========================
+   TOPBAR (ESTABLE)
+========================= */
+.topbar {
+    background: #000;
+    color: #FFD700;
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.brand img {
+    width: 30px;
+}
+
+/* MENU */
+.menu {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.menu a {
+    background: #FFD700;
+    color: #000;
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* =========================
+   RESPONSIVE (MÓVIL)
+========================= */
+@media (max-width: 768px) {
+
+    body {
+        padding: 6px;
+    }
+
+    .card {
+        max-width: 95%;
+    }
+
+    .topbar {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .menu {
+        justify-content: center;
+    }
+
+    .brand {
+        justify-content: center;
+        width: 100%;
+        white-space: normal;
+    }
+}

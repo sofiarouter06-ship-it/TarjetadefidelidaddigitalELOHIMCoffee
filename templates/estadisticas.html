@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Estadísticas - ELOHIM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/estilo.css">
+
+    <style>
+        body{
+            margin:0;
+            font-family:Arial;
+            background:#ffffff;
+        }
+
+        .topbar{
+            background:#000000;
+            color:#FFD700;
+            padding:15px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            flex-wrap:wrap;
+        }
+
+        .brand{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            font-weight:bold;
+            color:#FFD700;
+        }
+
+        .brand img{
+            width:30px;
+        }
+
+        .topbar a{
+            color:#000;
+            margin:5px;
+            text-decoration:none;
+            background:#FFD700;
+            padding:8px 12px;
+            border-radius:8px;
+            font-size:14px;
+            font-weight:bold;
+        }
+
+        .container{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            min-height:calc(100vh - 70px);
+            padding:20px;
+        }
+
+        .card{
+            width:100%;
+            max-width:450px;
+            background:white;
+            padding:25px;
+            border-radius:20px;
+            box-shadow:0 0 15px rgba(0,0,0,0.15);
+            text-align:center;
+            border-top:6px solid #FFD700;
+        }
+
+        h1{
+            color:#000;
+            margin-bottom:20px;
+        }
+
+        .box{
+            background:#000;
+            color:#FFD700;
+            padding:15px;
+            border-radius:12px;
+            margin:12px 0;
+            font-size:18px;
+            font-weight:bold;
+            transition:0.2s;
+        }
+
+        .box:hover{
+            transform:scale(1.03);
+        }
+
+        .small{
+            font-size:14px;
+            opacity:0.9;
+            margin-top:5px;
+            display:block;
+        }
+
+        .btn{
+            display:inline-block;
+            margin-top:15px;
+            text-decoration:none;
+            background:#FFD700;
+            color:#000;
+            padding:10px 15px;
+            border-radius:10px;
+            font-weight:bold;
+            transition:0.2s;
+        }
+
+        .btn:hover{
+            background:#e6c200;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="topbar">
+
+    <div class="brand">
+        <img src="/static/logo.png">
+        ELOHIM COFFEE - Admin
+    </div>
+
+    <div>
+        <a href="/admin">Inicio</a>
+        <a href="/excel/download">Excel</a>
+        <a href="/estadisticas">Estadísticas</a>
+        <a href="/logout">Cerrar sesión</a>
+    </div>
+
+</div>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>📊 Estadísticas</h1>
+
+        <div class="box">
+            👥 Clientes registrados
+            <span class="small">{{ clientes or 0 }}</span>
+        </div>
+
+        <div class="box">
+            🎁 Tarjetas completadas
+            <span class="small">{{ completadas or 0 }}</span>
+        </div>
+
+        <div class="box">
+            ☕ Total sellos entregados
+            <span class="small">{{ sellos or 0 }}</span>
+        </div>
+
+        <a class="btn" href="/admin">Volver al panel</a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

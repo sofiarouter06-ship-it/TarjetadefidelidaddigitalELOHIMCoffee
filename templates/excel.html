@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Excel - ELOHIM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/estilo.css">
+
+    <style>
+        body{
+            margin:0;
+            font-family:Arial;
+            background:#ffffff;
+        }
+
+        .topbar{
+            background:#000000;
+            color:#FFD700;
+            padding:15px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            flex-wrap:wrap;
+        }
+
+        .brand{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            font-weight:bold;
+            color:#FFD700;
+        }
+
+        .brand img{
+            width:30px;
+        }
+
+        .topbar a{
+            color:#000000;
+            background:#FFD700;
+            padding:8px 12px;
+            border-radius:8px;
+            text-decoration:none;
+            margin:5px;
+            font-weight:bold;
+            font-size:14px;
+        }
+
+        .container{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:calc(100vh - 70px);
+            padding:20px;
+        }
+
+        .card{
+            text-align:center;
+            background:white;
+            padding:30px;
+            border-radius:20px;
+            box-shadow:0 0 15px rgba(0,0,0,0.15);
+            border-top:6px solid #FFD700;
+            width:90%;
+            max-width:400px;
+        }
+
+        h2{
+            color:#000;
+            margin-bottom:10px;
+        }
+
+        p{
+            color:#333;
+        }
+
+        a.btn{
+            display:inline-block;
+            margin-top:20px;
+            background:#FFD700;
+            color:#000;
+            padding:12px 15px;
+            border-radius:10px;
+            text-decoration:none;
+            font-weight:bold;
+            transition:0.2s;
+        }
+
+        a.btn:hover{
+            background:#e6c200;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="topbar">
+
+    <div class="brand">
+        <img src="/static/logo.png">
+        ELOHIM Coffee - Admin
+    </div>
+
+    <div>
+        <a href="/admin">Inicio</a>
+        <a href="/excel">Excel</a>
+        <a href="/estadisticas">Estadísticas</a>
+        <a href="/logout">Cerrar sesión</a>
+    </div>
+
+</div>
+
+<div class="container">
+
+    <div class="card">
+
+        <h2>📊 Exportar Excel</h2>
+
+        <p>Descarga la base de datos de clientes en formato Excel</p>
+
+        <a class="btn" href="/excel/download">
+            Generar Excel
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Admin - ELOHIM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/estilo.css">
+
+    <style>
+        body{
+            margin:0;
+            font-family:Arial;
+            background:#ffffff;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+        }
+
+        .card{
+            width:90%;
+            max-width:350px;
+            background:white;
+            padding:25px;
+            border-radius:20px;
+            box-shadow:0 0 15px rgba(0,0,0,0.15);
+            text-align:center;
+            border-top:6px solid #FFD700;
+        }
+
+        img{
+            width:70px;
+            margin-bottom:10px;
+        }
+
+        h2{
+            color:#000000;
+            margin:5px 0;
+        }
+
+        input{
+            width:100%;
+            padding:12px;
+            margin-top:10px;
+            border:1px solid #ccc;
+            border-radius:10px;
+            outline:none;
+        }
+
+        input:focus{
+            border:1px solid #FFD700;
+        }
+
+        button{
+            width:100%;
+            margin-top:15px;
+            padding:12px;
+            background:#000000;
+            border:none;
+            color:#FFD700;
+            border-radius:10px;
+            cursor:pointer;
+            font-weight:bold;
+        }
+
+        button:hover{
+            background:#1a1a1a;
+        }
+
+        .error{
+            margin-top:10px;
+            color:red;
+            font-size:14px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <img src="/static/logo.png">
+
+    <h2>ELOHIM ADMIN</h2>
+
+    <form method="POST" action="/login">
+
+        <input type="text" name="usuario" placeholder="Usuario" required>
+
+        <input type="password" name="password" placeholder="Contraseña" required>
+
+        <button type="submit">Ingresar</button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

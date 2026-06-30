@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registro - ELOHIM Coffee</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/estilo.css">
+
+    <style>
+        /* mejora visual sin tocar CSS global */
+        .card{
+            max-width: 420px;
+            margin: auto;
+            text-align: center;
+        }
+
+        input, select{
+            width: 100%;
+            padding: 10px;
+            margin: 6px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        button{
+            width: 100%;
+            padding: 10px;
+            background: #FFD700;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover{
+            opacity: 0.9;
+        }
+
+        h1{
+            margin: 10px 0 5px;
+        }
+
+        p{
+            color: gray;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <img src="/static/logo.png" style="width:70px; margin-bottom:10px;">
+
+    <h1>ELOHIM Coffee</h1>
+    <p>Registro de tarjeta de fidelidad</p>
+
+    <form action="/registrar" method="POST">
+
+        <input type="text"
+               name="nombre"
+               placeholder="Nombre"
+               required>
+
+        <input type="text"
+               name="apellido"
+               placeholder="Apellido"
+               required>
+
+        <select name="sucursal" required>
+            <option value="">Selecciona una sucursal</option>
+            <option value="Peto">Peto</option>
+            <option value="Tekax">Tekax</option>
+        </select>
+
+        <input type="tel"
+               name="telefono"
+               placeholder="Teléfono (10 dígitos)"
+               pattern="[0-9]{10}"
+               maxlength="10"
+               inputmode="numeric"
+               required>
+
+        <button type="submit">Crear tarjeta</button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

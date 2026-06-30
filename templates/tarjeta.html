@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ELOHIM Coffee - Tarjeta</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/estilo.css">
+
+    <style>
+        .logo{
+            width: 70px;
+            margin-bottom: 10px;
+        }
+
+        .nombre{
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .info{
+            color: gray;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .estado{
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .barra{
+            width: 100%;
+            height: 10px;
+            background: #eee;
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progreso{
+            height: 100%;
+            background: #FFD700;
+            transition: width 0.3s ease;
+        }
+
+        .sellos{
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .sellos img{
+            width: 45px;
+        }
+
+        .completo{
+            margin-top: 10px;
+            background: #fff3b0;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <img src="/static/logo.png" class="logo">
+
+    <div class="titulo-tarjeta">ELOHIM Coffee</div>
+
+    <div class="nombre">
+        {{ cliente.get("nombre", "") }} {{ cliente.get("apellido", "") }}
+    </div>
+
+    <div class="info">📱 {{ cliente.get("telefono", "") }}</div>
+    <div class="info">📍 {{ cliente.get("sucursal", "") }}</div>
+
+    <div class="estado">
+        Sellos: <span id="sellos">{{ cliente.get("sellos", 0) }}</span> / 10
+    </div>
+
+    <div class="sellos" id="sellosVisuales">
+        {% for i in range(10) %}
+            {% if i < cliente.get("sellos", 0) %}
+                <img src="/static/sello_lleno.png">
+            {% else %}
+                <img src="/static/sello_vacio.png">
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <div class="barra">
+        <div class="progreso" id="barraProgreso"
+            style="width: {{ (cliente.get('sellos',0) / 10) * 100 }}%;"></div>
+    </div>
+
+    <div id="mensajePremio">
+        {% if cliente.get("sellos", 0) == 10 %}
+            <div class="completo">
+                🎉 ¡Café gratis desbloqueado!
+            </div>
+        {% endif %}
+    </div>
+
+    {% if cliente.get("id") %}
+    <div style="margin-top: 20px;">
+        <img src="/static/qr/{{ cliente['id'] }}.png" width="160">
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+
+let sellosActuales = {{ cliente.get("sellos", 0) }};
+let isUpdating = false;
+
+setInterval(async () => {
+
+    if (isUpdating) return;
+    isUpdating = true;
+
+    try {
+        const res = await fetch(window.location.href);
+        const html = await res.text();
+
+        const doc = new DOMParser().parseFromString(html, "text/html");
+
+        const sellosEl = doc.getElementById("sellos");
+        if (!sellosEl) {
+            isUpdating = false;
+            return;
+        }
+
+        const nuevosSellos = parseInt(sellosEl.innerText || "0");
+
+        if (nuevosSellos > sellosActuales) {
+            alert("🎉 +1 sello agregado");
+        }
+
+        sellosActuales = nuevosSellos;
+
+        document.getElementById("sellos").innerText = nuevosSellos;
+
+        document.getElementById("barraProgreso").style.width =
+            (nuevosSellos / 10) * 100 + "%";
+
+        let htmlSellos = "";
+        for (let i = 0; i < 10; i++) {
+            htmlSellos += (i < nuevosSellos)
+                ? '<img src="/static/sello_lleno.png">'
+                : '<img src="/static/sello_vacio.png">';
+        }
+
+        document.getElementById("sellosVisuales").innerHTML = htmlSellos;
+
+        const mensaje = document.getElementById("mensajePremio");
+
+        if (nuevosSellos >= 10 && !mensaje.dataset.done) {
+            mensaje.innerHTML = `
+                <div class="completo">
+                    🎉 ¡Café gratis desbloqueado!
+                </div>`;
+            mensaje.dataset.done = "true";
+        }
+
+        if (nuevosSellos < 10) {
+            mensaje.dataset.done = "";
+            mensaje.innerHTML = "";
+        }
+
+    } catch (err) {
+        console.log("Error actualizando tarjeta:", err);
+    }
+
+    isUpdating = false;
+
+}, 3000);
+
+</script>
+
+</body>
+</html>
