@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Escanear QR</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <style>
+        body{
+            font-family: Arial;
+            text-align: center;
+            padding: 10px;
+        }
+
+        #reader{
+            margin: auto;
+        }
+
+        #info{
+            margin-top: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        button{
+            padding: 10px;
+            border: none;
+            background: #FFD700;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>📷 Escanear QR del cliente</h2>
+
+<div id="reader" style="width:300px;"></div>
+
+<hr>
+
+<div id="info" style="display:none;">
+    <h3>Cliente encontrado</h3>
+
+    <p><b>Nombre:</b> <span id="nombre"></span></p>
+    <p><b>Sucursal:</b> <span id="sucursal"></span></p>
+    <p><b>Sellos:</b> <span id="sellos"></span></p>
+
+    <button onclick="agregarSello()">
+        + Agregar sello
+    </button>
+</div>
+
+<script>
+
+let clienteId = null;
+let scannerActivo = true;
+
+const qr = new Html5Qrcode("reader");
+
+// =========================
+// INICIAR SCANNER
+// =========================
+qr.start(
+  { facingMode: "environment" },
+  { fps: 10, qrbox: 250 },
+  (decodedText) => {
+
+    if (!scannerActivo) return;
+
+    scannerActivo = false;
+
+    // =========================
+    // VALIDACIÓN SEGURA DEL QR
+    // =========================
+    if (!decodedText) {
+        alert("QR vacío");
+        scannerActivo = true;
+        return;
+    }
+
+    // limpiar URL o texto
+    clienteId = decodedText;
+
+    if (decodedText.includes("/")) {
+        clienteId = decodedText.split("/").pop();
+    }
+
+    clienteId = clienteId.trim();
+
+    // validar ID
+    if (!clienteId || isNaN(clienteId)) {
+        alert("QR inválido");
+        scannerActivo = true;
+        return;
+    }
+
+    // =========================
+    // CONSULTA AL BACKEND
+    // =========================
+    fetch("/api/buscar_cliente", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ id: clienteId })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+      if (data.error) {
+        alert("Cliente no encontrado");
+        scannerActivo = true;
+        return;
+      }
+
+      document.getElementById("nombre").innerText =
+        data.nombre + " " + data.apellido;
+
+      document.getElementById("sucursal").innerText = data.sucursal;
+      document.getElementById("sellos").innerText = data.sellos;
+
+      document.getElementById("info").style.display = "block";
+    })
+    .catch(() => {
+        alert("Error de conexión con el servidor");
+        scannerActivo = true;
+    });
+
+    qr.stop().catch(()=>{});
+  }
+).catch(err => {
+    alert("Error al abrir cámara: " + err);
+});
+
+
+// =========================
+// AGREGAR SELLO
+// =========================
+function agregarSello() {
+
+  if (!clienteId) {
+    alert("No hay cliente seleccionado");
+    return;
+  }
+
+  fetch("/api/agregar_sello", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ id: clienteId })
+  })
+  .then(res => res.json())
+  .then(data => {
+
+    if (data.error) {
+        alert("Error: " + data.error);
+        return;
+    }
+
+    alert("✔ Sello agregado: " + data.sellos);
+
+    document.getElementById("sellos").innerText = data.sellos;
+
+    setTimeout(() => {
+      location.reload();
+    }, 800);
+
+  })
+  .catch(() => {
+    alert("Error al agregar sello");
+  });
+
+}
+
+</script>
+
+</body>
+</html>

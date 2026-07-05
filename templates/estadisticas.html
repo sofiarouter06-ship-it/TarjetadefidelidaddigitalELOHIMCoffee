@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Estadísticas - ELOHIM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/estilo.css">
+</head>
+
+<body>
+
+<div class="topbar">
+
+    <div class="brand">
+        <img src="/static/logo.png">
+        ELOHIM COFFEE - Admin
+    </div>
+
+    <div class="menu">
+        <a href="/admin">Inicio</a>
+        <a href="/excel/download">Excel</a>
+        <a href="/estadisticas">Estadísticas</a>
+        <a href="/logout">Cerrar sesión</a>
+    </div>
+
+</div>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>📊 Estadísticas</h1>
+
+        <div class="box">
+            👥 Clientes registrados
+            <span class="small">{{ clientes or 0 }}</span>
+        </div>
+
+        <div class="box">
+            🎁 Tarjetas completadas
+            <span class="small">{{ completadas or 0 }}</span>
+        </div>
+
+        <div class="box">
+            ☕ Total sellos entregados
+            <span class="small">{{ sellos or 0 }}</span>
+        </div>
+
+        <a class="btn-back" href="/admin">Volver al panel</a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

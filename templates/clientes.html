@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Clientes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/estilo.css">
+</head>
+
+<body>
+
+<h1>Clientes Registrados</h1>
+
+<table border="1" width="100%">
+
+<tr>
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>Apellido</th>
+    <th>Sucursal</th>
+    <th>Teléfono</th>
+    <th>Sellos</th>
+    <th>Completadas</th>
+    <th>Tarjeta</th>
+</tr>
+
+{% for cliente in clientes %}
+
+<tr>
+    <td>{{ cliente["id"] }}</td>
+    <td>{{ cliente["nombre"] }}</td>
+    <td>{{ cliente["apellido"] }}</td>
+    <td>{{ cliente["sucursal"] }}</td>
+    <td>{{ cliente["telefono"] }}</td>
+    <td>{{ cliente["sellos"] }}</td>
+    <td>{{ cliente["completadas"] }}</td>
+
+    <td>
+        <a href="/tarjeta/{{ cliente['id'] }}">
+            Ver Tarjeta
+        </a>
+    </td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>
