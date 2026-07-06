@@ -284,7 +284,7 @@ def quitar_sello():
         "sellos": sellos
     }
 
-    
+
 # =========================
 # RESTO
 # =========================
@@ -375,6 +375,11 @@ def eliminar(id):
 
     if not session.get("admin"):
         return redirect("/login")
+    
+    ruta_qr = os.path.join(QR_FOLDER, f"{id}.png")
+    
+    if os.path.exists(ruta_qr):
+        os.remove(ruta_qr)
 
     requests.delete(
         f"{SUPABASE_URL}/rest/v1/clientes?id=eq.{id}",
