@@ -58,6 +58,10 @@
             ➕ Agregar sello
         </button>
 
+        <button onclick="quitarSello()" id="btn-remove" style="display:none;">
+            ➖ Eliminar sello
+        </button>
+
         <button onclick="cerrarEscaner()">❌ Cancelar</button>
     </div>
 
@@ -156,7 +160,10 @@ function procesarQR(texto) {
         `;
 
         document.getElementById("btn-add").style.display = "inline-block";
+        document.getElementById("btn-remove").style.display = "inline-block";
     })
+
+    
     .catch(err => {
         document.getElementById("cliente-info").innerHTML =
             "<p style='color:red;'>Error del servidor</p>";
@@ -188,11 +195,46 @@ function agregarSello() {
     });
 }
 
+function quitarSello() {
+
+    if (!clienteActual) return;
+
+    if (!confirm("¿Deseas eliminar un sello de este cliente?")) {
+        return;
+    }
+
+    fetch("/api/quitar_sello", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ id: clienteActual.id })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if (!data || data.error) {
+            alert(data.error || "No se pudo eliminar el sello");
+            return;
+        }
+
+        document.getElementById("cliente-info").innerHTML = `
+            <h2>${data.nombre} ${data.apellido}</h2>
+            <p>Sucursal: ${data.sucursal}</p>
+            <p>Sellos actuales: ${data.sellos}/10</p>
+        `;
+    })
+    .catch(() => {
+        document.getElementById("cliente-info").innerHTML =
+            "<p style='color:red;'>Error al eliminar sello</p>";
+    });
+}
+
+
 function cerrarEscaner() {
 
     document.getElementById("scanner-container").style.display = "none";
     document.getElementById("cliente-info").innerHTML = "";
     document.getElementById("btn-add").style.display = "none";
+    document.getElementById("btn-remove").style.display = "none"; clienteActual = null;
 
     if (html5QrCode) {
         html5QrCode.stop().catch(()=>{});

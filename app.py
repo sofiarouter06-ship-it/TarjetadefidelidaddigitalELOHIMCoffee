@@ -240,7 +240,51 @@ def agregar_sello():
         "sellos": sellos
     }
 
+@app.route("/api/quitar_sello", methods=["POST"])
+def quitar_sello():
 
+    data = request.get_json(silent=True) or {}
+    cliente_id = data.get("id")
+
+    if not cliente_id:
+        return {"error": "ID vacío"}, 400
+
+    try:
+        cliente_id = int(cliente_id)
+    except:
+        return {"error": "ID inválido"}, 400
+
+    r = requests.get(
+        f"{SUPABASE_URL}/rest/v1/clientes?select=nombre,apellido,sucursal,sellos&id=eq.{cliente_id}",
+        headers=HEADERS
+    )
+
+    data = safe_list(r)
+
+    if not data:
+        return {"error": "Cliente no existe"}, 404
+
+    cliente = data[0]
+    sellos = cliente.get("sellos", 0)
+
+    if sellos > 0:
+        sellos -= 1
+
+        requests.patch(
+            f"{SUPABASE_URL}/rest/v1/clientes?id=eq.{cliente_id}",
+            headers=HEADERS,
+            json={"sellos": sellos}
+        )
+
+    return {
+        "mensaje": "Sello eliminado",
+        "nombre": cliente["nombre"],
+        "apellido": cliente["apellido"],
+        "sucursal": cliente["sucursal"],
+        "sellos": sellos
+    }
+
+    
 # =========================
 # RESTO
 # =========================
