@@ -144,10 +144,25 @@ function abrirEscaner() {
 
     html5QrCode.start(
         { facingMode: "environment" },
-        { fps: 10, qrbox: 250 },
+        {
+            fps: 10,
+            qrbox: { width: 250, height: 250 },
+            aspectRatio: 1.0
+        },
         (decodedText) => {
-            procesarQR(decodedText);
-            html5QrCode.stop();
+
+            html5QrCode.stop().then(() => {
+
+                document.getElementById("reader").innerHTML = "";
+
+                procesarQR(decodedText);
+
+            }).catch(() => {
+
+                procesarQR(decodedText);
+
+            });
+
         }
     ).catch(err => {
         console.log("Error cámara:", err);
