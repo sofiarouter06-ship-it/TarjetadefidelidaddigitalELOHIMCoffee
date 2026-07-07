@@ -59,7 +59,7 @@ input, select { width: 100%; padding: 12px; margin-top: 12px; border-radius: 10p
 button { width: 100%; margin-top: 15px; padding: 12px; border: none; border-radius: 10px; background: #FFD700; color: #000; font-weight: bold; cursor: pointer; font-size: 16px; }
 
 table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
-th { background: #000; color: #FFD700; padding: 12px; position: sticky; top: 75px; } /* Th sticky por si acaso */
+th { background: #000; color: #FFD700; padding: 12px;} /* Th sticky por si acaso */
 td { padding: 12px; text-align: center; border-bottom: 1px solid #eee; }
 .action { padding: 6px 12px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block; margin: 2px; }
 .ver { background: #FFD700; color: #000; }
