@@ -97,10 +97,30 @@
                 </td>
 
                 <td>
-                    <a class="action sumar" href="/agregar/{{ cliente['id'] }}">+Sello</a>
-                    <a class="action quitar" href="/quitar/{{ cliente['id'] }}">-Sello</a>
-                    <a class="action reiniciar" href="/reiniciar/{{ cliente['id'] }}">Reiniciar</a>
-                    <a class="action eliminar" href="/eliminar/{{ cliente['id'] }}">Eliminar</a>
+                    <a class="action sumar" 
+                    href="/agregar/{{ cliente['id'] }}"
+                    onclick="return confirmarAgregar()">
+                    +Sello
+                    </a>
+
+                    <a class="action quitar"
+                    href="/quitar/{{ cliente['id'] }}"
+                    onclick="return confirmarQuitar()">
+                    -Sello
+                    </a>
+
+                    <a class="action reiniciar"
+                    href="/reiniciar/{{ cliente['id'] }}"
+                    onclick="return confirmarReiniciar()">
+                    Reiniciar
+                    </a>
+
+                    <a class="action eliminar"
+                    href="/eliminar/{{ cliente['id'] }}"
+                    onclick="return confirmarEliminar()">
+                    Eliminar
+                    </a>
+
                 </td>
             </tr>
         {% endfor %}
@@ -174,6 +194,9 @@ function procesarQR(texto) {
 function agregarSello() {
 
     if (!clienteActual) return;
+    if (!confirmarAgregar()) {
+        return;
+    }
 
     fetch("/api/agregar_sello", {
         method: "POST",
@@ -199,8 +222,7 @@ function agregarSello() {
 function quitarSello() {
 
     if (!clienteActual) return;
-
-    if (!confirm("¿Deseas eliminar un sello de este cliente?")) {
+    if (!confirmarQuitar()) {
         return;
     }
 
@@ -235,7 +257,8 @@ function cerrarEscaner() {
     document.getElementById("scanner-container").style.display = "none";
     document.getElementById("cliente-info").innerHTML = "";
     document.getElementById("btn-add").style.display = "none";
-    document.getElementById("btn-remove").style.display = "none"; clienteActual = null;
+    document.getElementById("btn-remove").style.display = "none";
+    clienteActual = null;
 
     if (html5QrCode) {
         html5QrCode.stop().catch(()=>{});
@@ -261,6 +284,22 @@ setInterval(async () => {
     }
 
 }, 5000);
+
+function confirmarAgregar(){
+    return confirm("☕ ¿Quieres agregar un sello a este cliente?");
+}
+
+function confirmarQuitar(){
+    return confirm("⚠️ ¿Estás seguro de eliminar un sello de este cliente?");
+}
+
+function confirmarReiniciar(){
+    return confirm("🔄 ¿Estás seguro de reiniciar la tarjeta?\n\nLos sellos volverán a 0.");
+}
+
+function confirmarEliminar(){
+    return confirm("❌ ¿Estás seguro de eliminar este cliente?\n\nEsta acción no se puede deshacer.");
+}
 
 </script>
 
