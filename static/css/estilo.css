@@ -77,3 +77,21 @@ td { padding: 12px; text-align: center; border-bottom: 1px solid #eee; }
 @media (max-width: 768px) {
     .topbar { flex-direction: column; gap: 15px; }
 }
+
+.tabla-responsive{
+    width:100%;
+    overflow-x:auto;
+}
+
+#reader{
+    width:100%;
+    max-width:320px;
+    margin:0 auto;
+}
+
+#scanner-container{
+    width:100%;
+    max-width:500px;
+    margin:20px auto;
+    text-align:center;
+}
