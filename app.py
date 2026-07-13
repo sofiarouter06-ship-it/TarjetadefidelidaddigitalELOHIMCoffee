@@ -96,9 +96,14 @@ def registrar():
     base_url = request.url_root.rstrip("/")
     url = f"{base_url}/tarjeta/{cliente_id}"
 
+    ruta_qr = os.path.join(QR_FOLDER, f"{cliente_id}.png")
+    print("GENERANDO QR:", url)
+    print("GUARDANDO EN:", ruta_qr)
+    
     img = qrcode.make(url)
-    img.save(os.path.join(QR_FOLDER, f"{cliente_id}.png"))
-
+    img.save(ruta_qr)
+    
+    print("QR CREADO")
     return redirect(f"/tarjeta/{cliente_id}")
 
 
