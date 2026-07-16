@@ -34,6 +34,23 @@ def safe_list(r):
         return data if isinstance(data, list) else []
     except:
         return []
+    
+def generar_qr(cliente_id, base_url):
+
+    os.makedirs(QR_FOLDER, exist_ok=True)
+
+    ruta_qr = os.path.join(QR_FOLDER, f"{cliente_id}.png")
+
+    url = f"{base_url}/tarjeta/{cliente_id}"
+
+    print("GENERANDO QR:", url)
+    print("GUARDANDO EN:", os.path.abspath(ruta_qr))
+
+    img = qrcode.make(url)
+    img.save(ruta_qr)
+
+    print("EXISTE:", os.path.exists(ruta_qr))
+    print("QR CREADO")
 
 
 @app.route("/")
@@ -58,6 +75,7 @@ def registrar():
     )
 
     existe = safe_list(r)
+
 
     if existe:
         return redirect(f"/tarjeta/{existe[0]['id']}")
@@ -90,25 +108,16 @@ def registrar():
 
     if not data:
         return "❌ Cliente creado pero no encontrado"
-
+    
     cliente_id = data[0]["id"]
-    
-    base_url = request.url_root.rstrip("/")
-    url = f"{base_url}/tarjeta/{cliente_id}"
-    
     try:
-        ruta_qr = os.path.join(QR_FOLDER, f"{cliente_id}.png")
-        print("GENERANDO QR:", url)
-        print("GUARDANDO EN:", os.path.abspath(ruta_qr))
-        
-        img = qrcode.make(url)
-        img.save(ruta_qr)
-        
-        print("EXISTE:", os.path.exists(ruta_qr))
-        print("QR CREADO")
+        generar_qr(cliente_id, request.url_root.rstrip("/"))
     except Exception as e:
         print("ERROR AL CREAR QR:", e)
+        
     return redirect(f"/tarjeta/{cliente_id}")
+    
+
 
 
 @app.route("/tarjeta/<int:id>")
@@ -123,8 +132,18 @@ def tarjeta(id):
 
     if not data:
         return "Cliente no encontrado"
-
+    
+    ruta_qr = os.path.join(QR_FOLDER, f"{id}.png")
+    
+    if not os.path.exists(ruta_qr):
+        print("QR NO EXISTE. REGENERANDO...")
+        try:
+            generar_qr(id, request.url_root.rstrip("/"))
+        except Exception as e:
+            print("ERROR AL REGENERAR QR:", e)
+        
     return render_template("tarjeta.html", cliente=data[0])
+
 
 
 @app.route("/login", methods=["GET", "POST"])
