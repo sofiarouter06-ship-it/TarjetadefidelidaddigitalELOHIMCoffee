@@ -92,18 +92,22 @@ def registrar():
         return "❌ Cliente creado pero no encontrado"
 
     cliente_id = data[0]["id"]
-
+    
     base_url = request.url_root.rstrip("/")
     url = f"{base_url}/tarjeta/{cliente_id}"
-
-    ruta_qr = os.path.join(QR_FOLDER, f"{cliente_id}.png")
-    print("GENERANDO QR:", url)
-    print("GUARDANDO EN:", ruta_qr)
     
-    img = qrcode.make(url)
-    img.save(ruta_qr)
-    
-    print("QR CREADO")
+    try:
+        ruta_qr = os.path.join(QR_FOLDER, f"{cliente_id}.png")
+        print("GENERANDO QR:", url)
+        print("GUARDANDO EN:", os.path.abspath(ruta_qr))
+        
+        img = qrcode.make(url)
+        img.save(ruta_qr)
+        
+        print("EXISTE:", os.path.exists(ruta_qr))
+        print("QR CREADO")
+    except Exception as e:
+        print("ERROR AL CREAR QR:", e)
     return redirect(f"/tarjeta/{cliente_id}")
 
 
