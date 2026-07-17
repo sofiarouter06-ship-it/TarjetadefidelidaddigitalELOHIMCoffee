@@ -63,14 +63,16 @@ def generar_qr(cliente_id, base_url):
         pass
 
     # Subir el QR al bucket
-    supabase.storage.from_("qr-codigos").upload(
+    respuesta = supabase.storage.from_("qr-codigos").upload(
         path=nombre_archivo,
         file=archivo.getvalue(),
         file_options={
             "content-type": "image/png",
-            "upsert": "True"
+            "upsert": "true"
         }
     )
+
+    print("UPLOAD:", respuesta)
 
     qr = supabase.storage.from_("qr-codigos").get_public_url(nombre_archivo)
 
