@@ -45,8 +45,7 @@ def safe_list(r):
 def generar_qr(cliente_id, base_url):
 
     url = f"{base_url}/tarjeta/{cliente_id}"
-
-    print("GENERANDO QR:", url)
+    print("1) URL:", url)
 
     img = qrcode.make(url)
 
@@ -56,13 +55,16 @@ def generar_qr(cliente_id, base_url):
 
     nombre_archivo = f"{cliente_id}.png"
 
-    # Elimina el archivo si ya existe (opcional)
+    print("2) Intentando borrar anterior...")
+
     try:
         supabase.storage.from_("qr-codigos").remove([nombre_archivo])
-    except:
-        pass
+        print("3) Archivo anterior eliminado")
+    except Exception as e:
+        print("3) REMOVE ERROR:", e)
 
-    # Subir el QR al bucket
+    print("4) Subiendo archivo...")
+
     respuesta = supabase.storage.from_("qr-codigos").upload(
         path=nombre_archivo,
         file=archivo.getvalue(),
@@ -72,16 +74,22 @@ def generar_qr(cliente_id, base_url):
         }
     )
 
-    print("UPLOAD:", respuesta)
+    print("5) RESPUESTA UPLOAD:")
+    print(respuesta)
+
+    print("6) Obteniendo URL pública...")
 
     qr = supabase.storage.from_("qr-codigos").get_public_url(nombre_archivo)
+
+    print("7) RESPUESTA get_public_url:")
+    print(qr)
 
     if isinstance(qr, dict):
         qr_url = qr["publicUrl"]
     else:
         qr_url = qr
 
-    print("QR SUBIDO:", qr_url)
+    print("8) URL FINAL:", qr_url)
 
     return qr_url
 
