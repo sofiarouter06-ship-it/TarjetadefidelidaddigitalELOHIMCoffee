@@ -4,6 +4,9 @@ import os
 import pandas as pd
 import uuid
 import requests
+import io
+from supabase import create_client
+
 
 app = Flask(__name__)
 app.secret_key = "elohim2026"
@@ -15,6 +18,11 @@ app.secret_key = "elohim2026"
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
+supabase = create_client(
+    SUPABASE_URL,
+    SUPABASE_KEY
+)
+
 if not SUPABASE_URL or not SUPABASE_KEY:
     raise Exception("Faltan variables SUPABASE_URL o SUPABASE_KEY")
 
@@ -24,9 +32,6 @@ HEADERS = {
     "Content-Type": "application/json"
 }
 
-QR_FOLDER = "static/qr"
-os.makedirs(QR_FOLDER, exist_ok=True)
-
 
 def safe_list(r):
     try:
@@ -35,22 +40,48 @@ def safe_list(r):
     except:
         return []
     
+
+    
 def generar_qr(cliente_id, base_url):
-
-    os.makedirs(QR_FOLDER, exist_ok=True)
-
-    ruta_qr = os.path.join(QR_FOLDER, f"{cliente_id}.png")
 
     url = f"{base_url}/tarjeta/{cliente_id}"
 
     print("GENERANDO QR:", url)
-    print("GUARDANDO EN:", os.path.abspath(ruta_qr))
 
     img = qrcode.make(url)
-    img.save(ruta_qr)
 
-    print("EXISTE:", os.path.exists(ruta_qr))
-    print("QR CREADO")
+    archivo = io.BytesIO()
+    img.save(archivo, format="PNG")
+    archivo.seek(0)
+
+    nombre_archivo = f"{cliente_id}.png"
+
+    # Elimina el archivo si ya existe (opcional)
+    try:
+        supabase.storage.from_("qr-codigos").remove([nombre_archivo])
+    except:
+        pass
+
+    # Subir el QR al bucket
+    supabase.storage.from_("qr-codigos").upload(
+        path=nombre_archivo,
+        file=archivo.getvalue(),
+        file_options={
+            "content-type": "image/png",
+            "upsert": "True"
+        }
+    )
+
+    qr = supabase.storage.from_("qr-codigos").get_public_url(nombre_archivo)
+
+    if isinstance(qr, dict):
+        qr_url = qr["publicUrl"]
+    else:
+        qr_url = qr
+
+    print("QR SUBIDO:", qr_url)
+
+    return qr_url
 
 
 @app.route("/")
@@ -75,7 +106,6 @@ def registrar():
     )
 
     existe = safe_list(r)
-
 
     if existe:
         return redirect(f"/tarjeta/{existe[0]['id']}")
@@ -108,17 +138,30 @@ def registrar():
 
     if not data:
         return "❌ Cliente creado pero no encontrado"
-    
+
     cliente_id = data[0]["id"]
+
     try:
-        generar_qr(cliente_id, request.url_root.rstrip("/"))
+        qr_url = generar_qr(
+            cliente_id,
+            request.url_root.rstrip("/")
+        )
+
+        update = requests.patch(
+            f"{SUPABASE_URL}/rest/v1/clientes?id=eq.{cliente_id}",
+            headers=HEADERS,
+            json={
+                "qr_url": qr_url
+            }
+        )
+
+        print("PATCH:", update.status_code)
+        print(update.text)
+
     except Exception as e:
         print("ERROR AL CREAR QR:", e)
-        
+
     return redirect(f"/tarjeta/{cliente_id}")
-    
-
-
 
 @app.route("/tarjeta/<int:id>")
 def tarjeta(id):
@@ -132,18 +175,11 @@ def tarjeta(id):
 
     if not data:
         return "Cliente no encontrado"
-    
-    ruta_qr = os.path.join(QR_FOLDER, f"{id}.png")
-    
-    if not os.path.exists(ruta_qr):
-        print("QR NO EXISTE. REGENERANDO...")
-        try:
-            generar_qr(id, request.url_root.rstrip("/"))
-        except Exception as e:
-            print("ERROR AL REGENERAR QR:", e)
-        
-    return render_template("tarjeta.html", cliente=data[0])
 
+    return render_template(
+        "tarjeta.html",
+        cliente=data[0]
+    )
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -404,10 +440,20 @@ def eliminar(id):
     if not session.get("admin"):
         return redirect("/login")
     
-    ruta_qr = os.path.join(QR_FOLDER, f"{id}.png")
-    
-    if os.path.exists(ruta_qr):
-        os.remove(ruta_qr)
+    r = requests.get(
+    f"{SUPABASE_URL}/rest/v1/clientes?select=qr_url&id=eq.{id}",
+    headers=HEADERS
+)
+
+    data = safe_list(r)
+
+    if data:
+        try:
+            supabase.storage.from_("qr-codigos").remove(
+                [f"{id}.png"]
+            )
+        except Exception as e:
+            print(e)
 
     requests.delete(
         f"{SUPABASE_URL}/rest/v1/clientes?id=eq.{id}",

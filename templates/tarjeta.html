@@ -48,9 +48,9 @@
         {% endif %}
     </div>
 
-    {% if cliente.get("id") %}
-    <div style="margin-top: 20px;">
-        <img src="/static/qr/{{ cliente['id'] }}.png" width="160">
+    {% if cliente.get("qr_url") %}
+    <div style="margin-top:20px;">
+        <img src="{{ cliente['qr_url'] }}" width="160">
     </div>
     {% endif %}
 
