@@ -288,9 +288,15 @@ function cerrarEscaner() {
     }
 }
 
-/* AUTO REFRESH SEGURO */
+/* AUTO REFRESH SOLO EN "MOSTRAR TODOS" */
 setInterval(async () => {
     try {
+
+        // Si estamos viendo una búsqueda, no modificar la tabla
+        if (window.location.pathname !== "/admin") {
+            return;
+        }
+
         const res = await fetch("/admin");
         const html = await res.text();
 
