@@ -38,9 +38,17 @@
     <h2>Clientes registrados</h2>
 
     <form class="search" action="/buscar" method="GET">
-        <input type="text" name="telefono" placeholder="Buscar teléfono">
+        <input
+            type="text"
+            name="nombre"
+            placeholder="Buscar por nombre completo"
+        >
+
         <button type="submit">Buscar</button>
-        <a class="action ver" href="/admin">Mostrar todos</a>
+
+        <a class="action ver" href="/admin">
+            Mostrar todos
+        </a>
     </form>
 
     <button onclick="abrirEscaner()" style="margin:10px 0;">

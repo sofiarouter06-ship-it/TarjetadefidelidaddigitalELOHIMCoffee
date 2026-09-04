@@ -225,24 +225,50 @@ def admin():
     return render_template("admin.html", clientes=safe_list(r))
 
 
+
 @app.route("/buscar")
 def buscar():
 
     if not session.get("admin"):
         return redirect("/login")
 
-    telefono = request.args.get("telefono", "").strip()
+    nombre = request.args.get("nombre", "").strip()
 
-    r = requests.get(
-        f"{SUPABASE_URL}/rest/v1/clientes?select=*&telefono=eq.{telefono}",
-        headers=HEADERS
-    )
+    if not nombre:
+        r = requests.get(
+            f"{SUPABASE_URL}/rest/v1/clientes?select=*",
+            headers=HEADERS
+        )
+    else:
+        palabras = nombre.split()
+
+        if len(palabras) >= 2:
+            nombre_busqueda = palabras[0]
+            apellido_busqueda = " ".join(palabras[1:])
+
+            r = requests.get(
+                f"{SUPABASE_URL}/rest/v1/clientes",
+                params={
+                    "select": "*",
+                    "nombre": f"ilike.*{nombre_busqueda}*",
+                    "apellido": f"ilike.*{apellido_busqueda}*"
+                },
+                headers=HEADERS
+            )
+        else:
+            r = requests.get(
+                f"{SUPABASE_URL}/rest/v1/clientes",
+                params={
+                    "select": "*",
+                    "or": f"(nombre.ilike.*{nombre}*,apellido.ilike.*{nombre}*)"
+                },
+                headers=HEADERS
+            )
 
     return render_template(
         "admin.html",
         clientes=safe_list(r)
     )
-
 
 # =========================
 # QR API
