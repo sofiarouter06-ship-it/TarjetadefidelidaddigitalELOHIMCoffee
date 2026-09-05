@@ -506,19 +506,30 @@ def estadisticas():
         return redirect("/login")
 
     r = requests.get(
-        f"{SUPABASE_URL}/rest/v1/clientes?select=sellos,completadas",
+        f"{SUPABASE_URL}/rest/v1/clientes?select=id,nombre,apellido,sucursal,sellos,completadas",
         headers=HEADERS
     )
 
     data = safe_list(r)
 
+    pendientes = [
+        x for x in data
+        if x.get("sellos", 0) == 10
+    ]
+
+    cerca = [
+        x for x in data
+        if x.get("sellos", 0) in [7, 8, 9]
+    ]
+
     return render_template(
         "estadisticas.html",
         clientes=len(data),
         completadas=sum(x.get("completadas", 0) for x in data),
-        sellos=sum(x.get("sellos", 0) for x in data)
+        sellos=sum(x.get("sellos", 0) for x in data),
+        pendientes=pendientes,
+        cerca=cerca
     )
-
 
 # =========================
 # EXCEL DOWNLOAD (AGREGADO)

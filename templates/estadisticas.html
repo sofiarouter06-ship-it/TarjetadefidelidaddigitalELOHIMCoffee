@@ -45,7 +45,124 @@
             <span class="small">{{ sellos or 0 }}</span>
         </div>
 
-        <a class="btn-back" href="/admin">Volver al panel</a>
+
+        <!-- ========================= -->
+        <!-- CLIENTES CON 10 SELLOS -->
+        <!-- ========================= -->
+
+        <div class="box">
+            🎁 CLIENTES CON 10 SELLOS — PENDIENTES
+        </div>
+
+        {% if pendientes %}
+
+        <div style="overflow-x:auto;">
+
+            <table style="width:100%; border-collapse:collapse; margin-top:15px;">
+
+                <thead>
+                    <tr>
+                        <th style="padding:10px; text-align:left;">Cliente</th>
+                        <th style="padding:10px; text-align:left;">Sucursal</th>
+                        <th style="padding:10px; text-align:center;">Sellos</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for cliente in pendientes %}
+
+                    <tr>
+                        <td style="padding:10px;">
+                            {{ cliente["nombre"] }} {{ cliente["apellido"] }}
+                        </td>
+
+                        <td style="padding:10px;">
+                            {{ cliente["sucursal"] }}
+                        </td>
+
+                        <td style="padding:10px; text-align:center;">
+                            {{ cliente["sellos"] }}/10
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <p style="margin-top:15px;">
+            No hay clientes con 10 sellos pendientes.
+        </p>
+
+        {% endif %}
+
+
+        <!-- ========================= -->
+        <!-- CERCA DE COMPLETAR -->
+        <!-- ========================= -->
+
+        <div class="box" style="margin-top:25px;">
+            🔥 CERCA DE COMPLETAR
+        </div>
+
+        {% if cerca %}
+
+        <div style="overflow-x:auto;">
+
+            <table style="width:100%; border-collapse:collapse; margin-top:15px;">
+
+                <thead>
+                    <tr>
+                        <th style="padding:10px; text-align:left;">Cliente</th>
+                        <th style="padding:10px; text-align:left;">Sucursal</th>
+                        <th style="padding:10px; text-align:center;">Sellos</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for cliente in cerca %}
+
+                    <tr>
+                        <td style="padding:10px;">
+                            {{ cliente["nombre"] }} {{ cliente["apellido"] }}
+                        </td>
+
+                        <td style="padding:10px;">
+                            {{ cliente["sucursal"] }}
+                        </td>
+
+                        <td style="padding:10px; text-align:center;">
+                            {{ cliente["sellos"] }}/10
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <p style="margin-top:15px;">
+            No hay clientes con 7, 8 o 9 sellos.
+        </p>
+
+        {% endif %}
+
+
+        <a class="btn-back" href="/admin">
+            Volver al panel
+        </a>
 
     </div>
 
